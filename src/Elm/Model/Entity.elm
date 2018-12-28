@@ -1,4 +1,4 @@
-module Model.Entity exposing (Entity(..), selectedView, view)
+module Model.Entity exposing (Entity(..), noteView, selectedView, stickyView, view)
 
 import Element as UI exposing (Element)
 import Element.Background as UI
@@ -62,25 +62,21 @@ noteView msg data =
 
 selectedView : Entity -> Element msg
 selectedView entity =
+    let
+        v { size, pos } =
+            UI.el
+                [ size.x |> UI.px |> UI.width
+                , size.y |> UI.px |> UI.height
+                , pos.x |> toFloat |> UI.moveRight
+                , pos.y |> toFloat |> UI.moveDown
+                , Border.color <| UI.rgb 0 0 0
+                , Border.width 5
+                ]
+                UI.none
+    in
     case entity of
-        Note { size, pos } ->
-            UI.el
-                [ size.x |> UI.px |> UI.width
-                , size.y |> UI.px |> UI.height
-                , pos.x |> toFloat |> UI.moveRight
-                , pos.y |> toFloat |> UI.moveDown
-                , Border.color <| UI.rgb 0 0 0
-                , Border.width 5
-                ]
-                UI.none
+        Note n ->
+            v n
 
-        Sticky { size, pos } ->
-            UI.el
-                [ size.x |> UI.px |> UI.width
-                , size.y |> UI.px |> UI.height
-                , pos.x |> toFloat |> UI.moveRight
-                , pos.y |> toFloat |> UI.moveDown
-                , Border.color <| UI.rgb 0 0 0
-                , Border.width 5
-                ]
-                UI.none
+        Sticky s ->
+            v s

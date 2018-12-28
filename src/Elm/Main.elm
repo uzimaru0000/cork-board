@@ -45,20 +45,8 @@ sticky str =
 init : () -> ( Model, Cmd Msg )
 init _ =
     ( Board
-        [ Entity.Sticky <| sticky "hoge"
-        , Entity.Note <|
-            { children =
-                [ { content = "Foo"
-                  , pos = Point 10 10
-                  , size = Point 100 100
-                  , isSelected = False
-                  }
-                ]
-            , pos = Point 100 100
-            , size = Point 200 200
-            , isSelected = False
-            }
-        ]
+        []
+        []
         Nothing
     , Cmd.none
     )
@@ -67,9 +55,6 @@ init _ =
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
-        Select maybeEntity ->
-            ( Board.childrenUpdate maybeEntity model, Cmd.none )
-
         _ ->
             ( model, Cmd.none )
 
