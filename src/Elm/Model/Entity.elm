@@ -1,82 +1,24 @@
-module Model.Entity exposing (Entity(..), noteView, selectedView, stickyView, view)
+module Model.Entity exposing (Content(..), Entity(..), Transform, move)
 
-import Element as UI exposing (Element)
-import Element.Background as UI
-import Element.Border as Border
-import Element.Events as UI
-import Json.Decode as JD
-import Model.Note exposing (Note)
-import Model.Sticky exposing (Sticky)
-import Point exposing (..)
-import Svg.Attributes exposing (enableBackground)
-import Utils
+import Point exposing (Point)
+import Reference
 
 
 type Entity
-    = Note Note
-    | Sticky Sticky
+    = Entity Transform Content
 
 
-view : (Entity -> msg) -> Entity -> Element msg
-view msg entity =
-    case entity of
-        Note record ->
-            noteView msg record
-
-        Sticky record ->
-            stickyView msg record
+type Content
+    = Note (List Entity)
+    | Sticky String
 
 
-stickyView : (Entity -> msg) -> Sticky -> Element msg
-stickyView msg data =
-    UI.text data.content
-        |> UI.el
-            [ data.size.x |> UI.px |> UI.width
-            , data.size.y |> UI.px |> UI.height
-            , data.pos.x |> toFloat |> UI.moveRight
-            , data.pos.y |> toFloat |> UI.moveDown
-            , UI.color <| UI.rgb 0 1 0
-            , Utils.stopPropagationOn "mousedown" (msg <| Sticky data) True
-                |> UI.htmlAttribute
-            ]
+type alias Transform =
+    { pos : Point
+    , size : Point
+    }
 
 
-noteView : (Entity -> msg) -> Note -> Element msg
-noteView msg data =
-    UI.el
-        ((data.children
-            |> List.map (stickyView msg)
-            |> List.map UI.inFront
-         )
-            ++ [ data.size.x |> UI.px |> UI.width
-               , data.size.y |> UI.px |> UI.height
-               , data.pos.x |> toFloat |> UI.moveRight
-               , data.pos.y |> toFloat |> UI.moveDown
-               , UI.color <| UI.rgb 1 0 0
-               , Utils.stopPropagationOn "mousedown" (msg <| Note data) True
-                    |> UI.htmlAttribute
-               ]
-        )
-        UI.none
-
-
-selectedView : Entity -> Element msg
-selectedView entity =
-    let
-        v { size, pos } =
-            UI.el
-                [ size.x |> UI.px |> UI.width
-                , size.y |> UI.px |> UI.height
-                , pos.x |> toFloat |> UI.moveRight
-                , pos.y |> toFloat |> UI.moveDown
-                , Border.color <| UI.rgb 0 0 0
-                , Border.width 5
-                ]
-                UI.none
-    in
-    case entity of
-        Note n ->
-            v n
-
-        Sticky s ->
-            v s
+move : Point -> Entity -> Entity
+move movement (Entity ({ pos } as transform) content) =
+    Entity { transform | pos = Point.add pos movement } content
