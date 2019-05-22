@@ -13,7 +13,8 @@
             "elm/json": "1.1.2",
             "elm/svg": "1.0.1",
             "mdgriffith/elm-ui": "1.1.0",
-            "tesk9/palette": "1.2.0"
+            "tesk9/palette": "1.2.0",
+            "turboMaCk/lazy-tree-with-zipper": "3.0.1"
         },
         "indirect": {
             "elm/time": "1.0.0",

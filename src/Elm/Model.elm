@@ -1,4 +1,4 @@
-module Model exposing (Model, Movement, Msg(..), init)
+module Model exposing (Model, Msg(..), init)
 
 import Model.Entity exposing (..)
 import Point exposing (..)
@@ -16,13 +16,6 @@ type Msg
     | Select (Reference Entity (List Entity))
     | Drag Point
     | End
-
-
-type alias Movement =
-    { ref : Reference Entity (List Entity)
-    , pos : Point
-    , parent : Point
-    }
 
 
 init : () -> ( Model, Cmd Msg )

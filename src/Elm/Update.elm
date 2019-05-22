@@ -1,7 +1,7 @@
 module Update exposing (update)
 
 import Model exposing (..)
-import Model.Entity as Entity exposing (Entity(..))
+import Model.Entity as Entity exposing (Content(..), Entity(..))
 import Point
 import Reference
 
